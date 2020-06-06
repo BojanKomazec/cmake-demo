@@ -1,0 +1,1 @@
+set(COMPANY_NAME "CompanyA")
