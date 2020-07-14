@@ -6,6 +6,13 @@ project(
    DESCRIPTION "CMake Demo"
 )
 
+message("Current project source dir is ${PROJECT_SOURCE_DIR}")
+message("Current binary dir is ${CMAKE_CURRENT_BINARY_DIR}")
+
+if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
+    message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.")
+endif()
+
 message(STATUS "BRAND=${BRAND}")
 
 include(${CMAKE_SOURCE_DIR}/brands/cmake-${BRAND}-params.cmake)
@@ -19,6 +26,8 @@ configure_file(Output.txt.in Output.txt)
 execute_process(
    COMMAND pwsh "-Command" ". ./echo.ps1; Show-Argument \
 -Arg0 ${COMPANY_NAME}"
+
+   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 
    OUTPUT_VARIABLE CMD_STDOUT
    ERROR_VARIABLE CMD_ERROR
