@@ -6,6 +6,8 @@ project(
    DESCRIPTION "CMake Demo"
 )
 
+include (${CMAKE_CURRENT_SOURCE_DIR}/util/util_demo.cmake)
+
 message("PROJECT_SOURCE_DIR = ${PROJECT_SOURCE_DIR}")
 message("CMAKE_CURRENT_BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}")
 
@@ -105,6 +107,14 @@ message(STATUS "COMPANY_NAME=${COMPANY_NAME}")
 
 configure_file(Output.txt.in Output.txt)
 
+#
+# execute_process()
+#
+
+execute_process(
+   COMMAND echo "execute_process() is executed in configuration stage"
+)
+
 # To be executed on Linux with PowerShell installed
 # TODO: add execution condition check (check if powershell is installed on linux)
 execute_process(
@@ -117,10 +127,29 @@ execute_process(
    ERROR_VARIABLE CMD_ERROR
    RESULT_VARIABLE CMD_RESULT
 )
-
 message(STATUS "Command STDOUT: ${CMD_STDOUT}")
 message(STATUS "Command ERROR:" ${CMD_ERROR})
 message(STATUS "Command RESULT:" ${CMD_RESULT})
+
+# This example shows how to check if OS is Windows and also
+# how to persist the output of the process in the variable.
+IF (WIN32)
+   execute_process(
+      COMMAND dir
+      RESULT_VARIABLE ls_result
+   )
+ELSE()
+   execute_process(
+      COMMAND ls
+      RESULT_VARIABLE ls_result
+   )
+ENDIF()
+message("ls_result='${ls_result}'")
+
+#
+# Demo how to call a function from included .cmake file
+#
+foo()
 
 #
 # As ALL is specified this target will be "built" when we execute either of these commands:
